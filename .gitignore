@@ -102,3 +102,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# Ignore PyCharm
+.idea/
+
+# Ignore project directory
+5970_6970_SP_19_PROJECT_5/
