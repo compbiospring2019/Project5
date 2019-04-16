@@ -81,32 +81,18 @@ def read_tmalign(file_path, dir=None):
     """
     if dir:
         file_path = os.path.join(dir, file_path)
-    tm_align = {}
     with open(file_path, 'r') as f:
         # Skip the header
-        line = f.readline()
-        while not line.startswith('Name of Chain_1:'):
-            line = f.readline()
-
-        # Read in sequence file names
-        tm_align['seq-1-name'] = get_seq_name_from_tmalign(line)
-        line = f.readline()
-        tm_align['seq-2-name'] = get_seq_name_from_tmalign(line)
         line = f.readline()
 
         while not line.startswith('TM-score'):
             line = f.readline()
 
-        tm_align['tm-score-seq-1'] = get_tm_score_from_tmalign(line)
+        tm_score_1 = get_tm_score_from_tmalign(line)
         line = f.readline()
-        tm_align['tm-score-seq-2'] = get_tm_score_from_tmalign(line)
+        tm_score_2 = get_tm_score_from_tmalign(line)
 
-    return tm_align
-
-
-def get_seq_name_from_tmalign(line):
-    line_parts = line.split('/')
-    return line_parts[2].replace('.pdb', '').strip()
+    return (tm_score_1 + tm_score_2) / 2.0
 
 
 def get_tm_score_from_tmalign(line):
