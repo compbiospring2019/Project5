@@ -43,6 +43,16 @@ def calc_sequence_info(pssm_file, pssm_dir, fasta_dir):
     info = {}
 
     # Calc PSSM averages
+    info['pssm'] = calc_pssm_averages(pssm_file, pssm_dir)
+
+    # TODO: Calc SS percentages
+
+    # TODO: Calc SA percentages
+
+    return info
+
+
+def calc_pssm_averages(pssm_file, pssm_dir):
     pssm = utils.read_pssm(pssm_file, pssm_dir)
     pssm_averages = {}
     for row in pssm:
@@ -57,10 +67,4 @@ def calc_sequence_info(pssm_file, pssm_dir, fasta_dir):
     for key in pssm_averages.keys():
         pssm_averages[key] /= (100 * len(pssm))
 
-    info['pssm'] = pssm_averages
-
-    # TODO: Calc SS percentages
-
-    # TODO: Calc SA percentages
-
-    return info
+    return pssm_averages
