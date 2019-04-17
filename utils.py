@@ -66,7 +66,6 @@ def read_pssm(file_path, dir=None):
             row = {'this-acid': line_list[1]}
             line_list = line_list[20:-2]
             for acid_num in range(len(headers)):
-                print('working on {}'.format(line_list[acid_num + 2]))
                 row[headers[acid_num]] = int(line_list[acid_num + 2])
             pssm.append(row)
 
