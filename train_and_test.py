@@ -11,6 +11,7 @@ def main():
     pssm_test = [pssm for pssm in pssm_list if pssm not in pssm_train]
     # train(pssm_train, pssm_dir, tm_align_dir)
 
+    # TODO: For testing purposes, remove later
     feature_matrix = build_feature_matrix(pssm_train, pssm_dir, None, tm_align_dir)
 
 

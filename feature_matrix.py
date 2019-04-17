@@ -12,12 +12,11 @@ def build_feature_matrix(pssm_files, pssm_dir, fasta_dir, tm_align_dir=None):
     sequence_info = {}
 
     for pssm_file in pssm_files:
-        print(pssm_file)
         sequence_name = pssm_file.replace('.pssm', '')
-        # Check if the PSSM has been read in yet
+
+        # If a sequence hasn't been read in yet, read in sequence, and add to sequence_info
         if sequence_name not in sequence_info:
-            # Read in sequence, add to sequence_info
-            info = calc_sequence_info()
+            info = calc_sequence_info(pssm_file, pssm_dir, fasta_dir)
             sequence_info[sequence_name] = info
 
         # Loop through pairs of sequences
@@ -36,15 +35,32 @@ def build_feature_matrix(pssm_files, pssm_dir, fasta_dir, tm_align_dir=None):
     return matrix
 
 
-def calc_sequence_info():
+def calc_sequence_info(pssm_file, pssm_dir, fasta_dir):
     """
     Calculates information about a sequence
     :return: Dictionary - {SS:{E:val, ...}, SA:{E:val}, PSSM:{amino_acid: avg PSSM val}
     """
-    # TODO: Calc PSSM averages
+    info = {}
+
+    # Calc PSSM averages
+    pssm = utils.read_pssm(pssm_file, pssm_dir)
+    pssm_averages = {}
+    for row in pssm:
+        for key in row.keys():
+            # For each amino acid (key), calculate the sum of the entire column
+            if key != 'this-acid':
+                if key not in pssm_averages:
+                    pssm_averages[key] = 0.0
+                pssm_averages[key] += row[key]
+
+    # Scale down numbers
+    for key in pssm_averages.keys():
+        pssm_averages[key] /= (100 * len(pssm))
+
+    info['pssm'] = pssm_averages
 
     # TODO: Calc SS percentages
 
     # TODO: Calc SA percentages
 
-    return None
+    return info
