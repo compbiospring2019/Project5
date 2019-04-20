@@ -23,24 +23,6 @@ def read_sequence(file_path, dir=None):
     return sequence.upper()
 
 
-def read_directory_contents(path, file_extension):
-    if not os.path.isdir(path):
-        # This is not a valid directory!
-        raise Exception('Not a valid directory!')
-
-    # Return a list of files with the file extension
-    ls_dir = os.listdir(path)
-    return [file_name for file_name in ls_dir if file_name.endswith(file_extension)]
-
-
-def write_json(file_name, json_object, dir=parent_directory):
-    # Write JSON object to a file
-    if dir:
-        file_name = os.path.join(dir, file_name)
-    with open(file_name, 'w') as outfile:
-        json.dump(json_object, outfile)
-
-
 def read_json():
     # Reads in the JSON object from model.json
     json_file = os.path.join(parent_directory, 'sa_model.json')
