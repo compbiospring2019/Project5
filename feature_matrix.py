@@ -1,3 +1,4 @@
+from solvent_accessibility.classify_sequence import classify
 import utils
 
 
@@ -48,6 +49,7 @@ def calc_sequence_info(pssm_file, pssm_dir, fasta_dir):
     # TODO: Calc SS percentages
 
     # TODO: Calc SA percentages
+    info['sa'] = classify(pssm_file.replace('.pssm', '.fasta'), fasta_dir)
 
     return info
 
