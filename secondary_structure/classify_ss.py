@@ -29,7 +29,7 @@ def maximum_likelihood(feature_values, dist_file, dir=parent_directory):
 
     prob = dists[dist_file]['prior']
     for feat_num in range(100):
-        prob *= gnb(feature_values[feat_num], dists[dist_file]['mu'][feat_num], dists[dist_file]['mu'][feat_num])
+        prob *= gnb(feature_values[feat_num], dists[dist_file]['mu'][feat_num], dists[dist_file]['sigma'][feat_num])
     return prob
 
 
