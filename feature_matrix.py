@@ -1,4 +1,5 @@
-from solvent_accessibility.classify_sequence import classify
+from solvent_accessibility.classify_sequence import classify as classify_sa
+from secondary_structure.classify_ss import classify as classify_ss
 import utils
 
 
@@ -46,10 +47,9 @@ def calc_sequence_info(pssm_file, pssm_dir, fasta_dir):
     # Calc PSSM averages
     info['pssm'] = calc_pssm_averages(pssm_file, pssm_dir)
 
-    # TODO: Calc SS percentages
+    info['ss'] = classify_ss(utils.read_pssm(pssm_file, pssm_dir))
 
-    # TODO: Calc SA percentages
-    info['sa'] = classify(pssm_file.replace('.pssm', '.fasta'), fasta_dir)
+    info['sa'] = classify_sa(pssm_file.replace('.pssm', '.fasta'), fasta_dir)
 
     return info
 
