@@ -26,10 +26,12 @@ def build_feature_matrix(pssm_files, pssm_dir, fasta_dir, tm_align_dir=None):
             if other_pssm == pssm_file:
                 break
             other_seq_name = other_pssm.replace('.pssm', '')
-            feature = {}
-            # TODO: Add in features from sequence_info
+            feature = {
+                'seq-1': sequence_info[sequence_name],
+                'seq-2': sequence_info[other_seq_name]
+            }
             if tm_align_dir:
-                # Read in TM score, add to feature
+                # Read in TM score, add to feature (for testing and training)
                 file_name = '{}_{}_tmalign'.format(sequence_name, other_seq_name)
                 feature['tm-score'] = utils.read_tmalign(file_name, tm_align_dir)
 
