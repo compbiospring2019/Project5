@@ -1,5 +1,4 @@
 from feature_matrix import build_feature_matrix
-from math import exp, log
 from random import normalvariate, sample
 import utils
 
@@ -12,12 +11,16 @@ def gradient_descent(pssm_train, pssm_dir, fasta_dir, tm_align_dir):
     # Build the feature matrix
     feature_matrix = build_feature_matrix(pssm_train, pssm_dir, fasta_dir, tm_align_dir)
 
+    # Batch
+    # global SAMPLE_SIZE
+    # SAMPLE_SIZE = len(feature_matrix)
+
     w_vector = new_w_vector(feature_matrix[0])
     gradient_vector = None
     count = 0
 
     print('Training the model...')
-    while not reached_top(w_vector, gradient_vector):
+    while not reached_top(w_vector, gradient_vector, feature_matrix):
         count += 1
         print('{}st loop!'.format(count))
         gradient_vector = calc_gradient(w_vector, feature_matrix)
@@ -68,7 +71,7 @@ def update_w(w_vector, gradient_vector):
     return w_vector
 
 
-def reached_top(w_vector, gradient_vector):
+def reached_top(w_vector, gradient_vector, feature_matrix):
     """
     Check if we've reached the top of the mountain
     :return: boolean
@@ -76,20 +79,22 @@ def reached_top(w_vector, gradient_vector):
     if not gradient_vector:
         return False
     # TODO: Fix this.
-    if normalvariate(0, 5) < 15:
+    squared_error = calc_squared_error(w_vector, feature_matrix)
+    print(squared_error)
+    if normalvariate(0, 5) < 15 or squared_error < 5.0:
         return False
     print('Reached the top!')
     return True
 
 
-def calc_max_conditional_likelihood(w_vector, feature_matrix):
-    sum_mcl = 0.0
+def calc_squared_error(w_vector, feature_matrix):
+    sum_error = 0.0
 
     for feature in feature_matrix:
-        feature_sum = calc_sum(w_vector, feature)
-        sum_mcl += feature['class'] * feature_sum - log(1 + exp(feature_sum))
+        difference = feature['tm-score'] - calc_sum(w_vector, feature)
+        sum_error += difference ** 2
 
-    return sum_mcl
+    return sum_error
 
 
 def new_w_vector(feature):
@@ -109,9 +114,9 @@ def new_w_vector(feature):
             w_vector[seq_num][feat_type] = {}
 
             for feat_name in feature[seq_num][feat_type].keys():
-                w_vector[seq_num][feat_type][feat_name] = normalvariate(0, 4)
+                w_vector[seq_num][feat_type][feat_name] = normalvariate(0, 0.5)
 
-    w_vector['intercept'] = normalvariate(0, 4)
+    w_vector['intercept'] = normalvariate(0, 0.5)
 
     return w_vector
 
