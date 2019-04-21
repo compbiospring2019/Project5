@@ -1,27 +1,32 @@
-from feature_matrix import build_feature_matrix
 from random import sample
 import sys
+from test import test_model
+from train import gradient_descent
 import utils
 
 
 def main():
     # Parse args and split data into training and testing
+    print('Parsing args...')
     pssm_list, tm_align_list, fasta_list, pssm_dir, tm_align_dir, fasta_dir = parse_args()
+    print('Splitting into test and training...')
     pssm_train = sample(pssm_list, int(0.75 * len(pssm_list)))
     pssm_test = [pssm for pssm in pssm_list if pssm not in pssm_train]
-    # train(pssm_train, pssm_dir, tm_align_dir)
 
-    # TODO: For testing purposes, remove later
-    feature_matrix = build_feature_matrix(pssm_train, pssm_dir, fasta_dir, tm_align_dir)
+    # Train the model
+    gradient_descent(pssm_train, pssm_dir, fasta_dir, tm_align_dir)
+
+    # Test the model
+    test_model()
 
 
-# TODO: Edit error message
 err_msg = '''
-Please enter two directory names (absolute paths)
-containing sequences for linear regression training data
+Please enter three directory names containing sequences 
+for linear regression training and testing data
 (with double quotes around them if they have spaces).
 The directory with PSSM files should come first, 
-followed by the path to the tmalign files.'''
+followed by the path to the tmalign directory,
+and finally the fasta directory.'''
 
 
 def parse_args():

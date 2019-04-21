@@ -1,5 +1,5 @@
 # Utils for COMP 5970 Project 5
-
+import json
 import os
 
 # Get the parent directory of this code
@@ -97,3 +97,28 @@ def read_tmalign(file_path, dir=None):
 def get_tm_score_from_tmalign(line):
     line_parts = line.split()
     return float(line_parts[1])
+
+
+def write_model(model, file_name='model.json', dir=parent_directory):
+    """
+    Write JSON object to a file
+    :return: None
+    """
+    if dir:
+        file_name = os.path.join(dir, file_name)
+    with open(file_name, 'w') as outfile:
+        json.dump(model, outfile)
+
+
+def read_model(file_name='model.json', dir=parent_directory):
+    """
+    Reads in the JSON object from model.json
+    :return: Loaded contents of model file
+    """
+    if dir:
+        file_name = os.path.join(dir, file_name)
+    with open(file_name, 'r') as file:
+        model = json.load(file)
+
+    return model
+
