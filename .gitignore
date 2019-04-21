@@ -108,3 +108,6 @@ venv.bak/
 
 # Ignore project directory
 5970_6970_SP_19_PROJECT_5/
+
+# Ignore model
+model.json
