@@ -18,7 +18,6 @@ dists = {}
 def maximum_likelihood(feature_values, dist_file, dir=parent_directory):
     dist_file = os.path.join(dir, dist_file)
     if dist_file not in dists:
-        print('Reading in {}'.format(dist_file))
         dists[dist_file] = {'sigma': {}, 'mu': {}}
         with open(dist_file, 'r') as f:
             dists[dist_file]['prior'] = float(f.readline())
