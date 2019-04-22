@@ -3,11 +3,14 @@ import sys
 import utils
 
 
-MODEL = utils.read_model()
+MODEL = None
 
 
 def main():
     pssm_dir, pssm_files, fasta_dir = parse_args()
+
+    global MODEL
+    MODEL = utils.read_model()
 
     feature_matrix = build_feature_matrix(pssm_files, pssm_dir, fasta_dir)
 
