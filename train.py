@@ -3,7 +3,7 @@ from random import normalvariate, sample
 import utils
 
 # Global variables
-SAMPLE_SIZE = 250
+SAMPLE_SIZE = 750
 STEP_SIZE = 0.001
 SMALLEST_SQUARED_ERROR = None
 BEST_MODEL = None
@@ -60,17 +60,18 @@ def update_w(w_vector, gradient_vector):
     Updates each w value in the w_vector
     :return: w_vector
     """
+    new_w = new_zero_vector(w_vector)
     for seq_num in w_vector.keys():
         if seq_num == 'intercept':
-            w_vector['intercept'] += 2 * STEP_SIZE * gradient_vector['intercept']
+            new_w['intercept'] = w_vector['intercept'] + 2 * STEP_SIZE * gradient_vector['intercept']
             continue
 
         for feat_type in w_vector[seq_num].keys():
             for feat_name in w_vector[seq_num][feat_type].keys():
-                w_vector[seq_num][feat_type][feat_name] += \
-                    2 * STEP_SIZE * gradient_vector[seq_num][feat_type][feat_name]
+                new_w[seq_num][feat_type][feat_name] = \
+                    w_vector[seq_num][feat_type][feat_name] + 2 * STEP_SIZE * gradient_vector[seq_num][feat_type][feat_name]
 
-    return w_vector
+    return new_w
 
 
 def reached_top(w_vector, feature_matrix):
@@ -78,9 +79,9 @@ def reached_top(w_vector, feature_matrix):
     Check if we've reached the top of the mountain
     :return: boolean
     """
-    global SMALLEST_SQUARED_ERROR, BEST_MODEL, ITERATIONS_SINCE_SMALLEST
+    global SMALLEST_SQUARED_ERROR, BEST_MODEL, ITERATIONS_SINCE_SMALLEST, STEP_SIZE
     squared_error = calc_squared_error(w_vector, feature_matrix)
-    print(squared_error, SMALLEST_SQUARED_ERROR)
+    print(squared_error, SMALLEST_SQUARED_ERROR, STEP_SIZE)
 
     if SMALLEST_SQUARED_ERROR is None or squared_error < SMALLEST_SQUARED_ERROR:
         # New lowest squared error found
@@ -91,7 +92,10 @@ def reached_top(w_vector, feature_matrix):
 
     ITERATIONS_SINCE_SMALLEST += 1
 
-    if ITERATIONS_SINCE_SMALLEST > 30:
+    if ITERATIONS_SINCE_SMALLEST == 10:
+        STEP_SIZE /= 10
+
+    if ITERATIONS_SINCE_SMALLEST > 50:
         # We haven't found a better mountaintop in a while, so we've probably reached it
         print('Reached the top!')
         return True
@@ -141,7 +145,7 @@ def new_zero_vector(feature):
 
     # Mirroring feature organization, randomly generate starting w values
     for seq_num in feature.keys():
-        if seq_num == 'tm-score':
+        if seq_num in ['tm-score', 'intercept']:
             continue
         vector[seq_num] = {}
 
