@@ -9,9 +9,6 @@ MODEL = None
 def main():
     pssm_dir, pssm_files, fasta_dir = parse_args()
 
-    global MODEL
-    MODEL = utils.read_model()
-
     feature_matrix = build_feature_matrix(pssm_files, pssm_dir, fasta_dir)
 
     tm_score = predict_tm_score(feature_matrix[0])
@@ -20,6 +17,10 @@ def main():
 
 
 def predict_tm_score(feature_row):
+    global MODEL
+    if MODEL is None:
+        MODEL = utils.read_model()
+
     # Start with the intercept
     tm_score = MODEL.get('intercept', 0.0)
 
