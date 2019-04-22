@@ -1,4 +1,4 @@
-from classify import predict_tm_score
+from predict_tm_score import predict_tm_score
 from feature_matrix import build_feature_matrix
 
 
