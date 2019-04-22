@@ -24,9 +24,11 @@ def gradient_descent(pssm_train, pssm_dir, fasta_dir, tm_align_dir):
     print('Training the model...')
     while not reached_top(w_vector, feature_matrix):
         count += 1
-        print('Loop {}'.format(count))
         gradient_vector = calc_gradient(w_vector, feature_matrix)
         w_vector = update_w(w_vector, gradient_vector)
+
+    print('Gradient Descent completed in {} iterations'.format(count))
+    print('with final step size {} and sample size {}'.format(STEP_SIZE, SAMPLE_SIZE))
 
     # Save the model to the file
     utils.write_model(w_vector)
@@ -81,7 +83,6 @@ def reached_top(w_vector, feature_matrix):
     """
     global SMALLEST_SQUARED_ERROR, BEST_MODEL, ITERATIONS_SINCE_SMALLEST, STEP_SIZE
     squared_error = calc_squared_error(w_vector, feature_matrix)
-    print(squared_error, SMALLEST_SQUARED_ERROR, STEP_SIZE)
 
     if SMALLEST_SQUARED_ERROR is None or squared_error < SMALLEST_SQUARED_ERROR:
         # New lowest squared error found

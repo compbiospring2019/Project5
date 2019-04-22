@@ -11,7 +11,7 @@ def test_model(pssm_test, pssm_dir, fasta_dir, tm_align_dir):
 
     average_error = sum(squared_errors) / len(squared_errors)
 
-    print('Average of squared errors on the test set: {}'.format(average_error))
+    print('\nAverage of squared errors on the test set: {}'.format(average_error))
     print('Maximum squared error: {}'.format(max(squared_errors)))
     print('Minimum squared error: {}'.format(min(squared_errors)))
 
