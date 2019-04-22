@@ -17,7 +17,7 @@ def main():
     gradient_descent(pssm_train, pssm_dir, fasta_dir, tm_align_dir)
 
     # Test the model
-    test_model()
+    test_model(pssm_test, pssm_dir, fasta_dir, tm_align_dir)
 
 
 err_msg = '''
