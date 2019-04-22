@@ -15,10 +15,6 @@ def gradient_descent(pssm_train, pssm_dir, fasta_dir, tm_align_dir):
     print('Building feature matrix...')
     feature_matrix = build_feature_matrix(pssm_train, pssm_dir, fasta_dir, tm_align_dir)
 
-    # Batch
-    # global SAMPLE_SIZE
-    # SAMPLE_SIZE = len(feature_matrix)
-
     w_vector = new_w_vector(feature_matrix[0])
     count = 0
 
