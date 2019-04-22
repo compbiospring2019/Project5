@@ -5,6 +5,9 @@ import utils
 # Global variables
 SAMPLE_SIZE = 250
 STEP_SIZE = 0.001
+SMALLEST_SQUARED_ERROR = None
+BEST_MODEL = None
+ITERATIONS_SINCE_SMALLEST = 0
 
 
 def gradient_descent(pssm_train, pssm_dir, fasta_dir, tm_align_dir):
@@ -16,13 +19,12 @@ def gradient_descent(pssm_train, pssm_dir, fasta_dir, tm_align_dir):
     # SAMPLE_SIZE = len(feature_matrix)
 
     w_vector = new_w_vector(feature_matrix[0])
-    gradient_vector = None
     count = 0
 
     print('Training the model...')
-    while not reached_top(w_vector, gradient_vector, feature_matrix):
+    while not reached_top(w_vector, feature_matrix):
         count += 1
-        print('{}st loop!'.format(count))
+        print('Loop {}'.format(count))
         gradient_vector = calc_gradient(w_vector, feature_matrix)
         w_vector = update_w(w_vector, gradient_vector)
 
@@ -71,20 +73,29 @@ def update_w(w_vector, gradient_vector):
     return w_vector
 
 
-def reached_top(w_vector, gradient_vector, feature_matrix):
+def reached_top(w_vector, feature_matrix):
     """
     Check if we've reached the top of the mountain
     :return: boolean
     """
-    if not gradient_vector:
-        return False
-    # TODO: Fix this.
+    global SMALLEST_SQUARED_ERROR, BEST_MODEL, ITERATIONS_SINCE_SMALLEST
     squared_error = calc_squared_error(w_vector, feature_matrix)
-    print(squared_error)
-    if normalvariate(0, 5) < 15 or squared_error < 5.0:
+    print(squared_error, SMALLEST_SQUARED_ERROR)
+
+    if SMALLEST_SQUARED_ERROR is None or squared_error < SMALLEST_SQUARED_ERROR:
+        # New lowest squared error found
+        SMALLEST_SQUARED_ERROR = squared_error
+        BEST_MODEL = feature_matrix
+        ITERATIONS_SINCE_SMALLEST = 0
         return False
-    print('Reached the top!')
-    return True
+
+    ITERATIONS_SINCE_SMALLEST += 1
+
+    if ITERATIONS_SINCE_SMALLEST > 30:
+        # We haven't found a better mountaintop in a while, so we've probably reached it
+        print('Reached the top!')
+        return True
+    return False
 
 
 def calc_squared_error(w_vector, feature_matrix):
@@ -94,7 +105,7 @@ def calc_squared_error(w_vector, feature_matrix):
         difference = feature['tm-score'] - calc_sum(w_vector, feature)
         sum_error += difference ** 2
 
-    return sum_error
+    return sum_error / len(feature_matrix)
 
 
 def new_w_vector(feature):
