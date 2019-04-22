@@ -18,7 +18,10 @@ def main():
 
 def predict_tm_score(feature_row):
     # Start with the intercept
-    tm_score = MODEL.pop('intercept', 0.0)
+    tm_score = MODEL.get('intercept', 0.0)
+
+    # Get rid of the tm-score, if it's in the dictionary
+    actual_tm_score = feature_row.pop('tm-score', None)
 
     # Compute the sum of weight vector values and feature values
     for seq_num in feature_row.keys():
