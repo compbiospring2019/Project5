@@ -12,6 +12,7 @@ ITERATIONS_SINCE_SMALLEST = 0
 
 def gradient_descent(pssm_train, pssm_dir, fasta_dir, tm_align_dir):
     # Build the feature matrix
+    print('Building feature matrix...')
     feature_matrix = build_feature_matrix(pssm_train, pssm_dir, fasta_dir, tm_align_dir)
 
     # Batch
